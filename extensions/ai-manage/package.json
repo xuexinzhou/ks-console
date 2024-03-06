@@ -5,8 +5,8 @@
   "version": "1.0.0",
   "homepage": "",
   "main": "dist/index.js",
-  "files": [
-    "dist"
-  ],
-  "dependencies": {}
+  "files": ["dist"],
+  "dependencies": {
+    "react-hook-form": "7.43.5"
+  }
 }

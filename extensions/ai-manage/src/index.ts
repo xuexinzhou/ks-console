@@ -3,11 +3,11 @@ import locales from './locales';
 
 const menu = {
   parent: 'topbar',
-  name: 'ai-manage',
-  title: 'ai-manage',
-  icon: 'cluster',
+  name: 'ai-manage/dashboard',
+  title: 'AI_MANAGE',
+  icon: 'computing',
   order: 0,
-  desc: 'ai-manage',
+  desc: 'SUB_TITLE',
   skipAuth: true,
 };
 

@@ -31,7 +31,7 @@
     "@kubed/components": "^0.0.81",
     "@kubed/diff-viewer": "^0.0.15",
     "@kubed/hooks": "^0.0.14",
-    "@kubed/icons": "^0.0.13",
+    "@kubed/icons": "^0.0.16",
     "@kubed/log-viewer": "^0.0.14",
     "@kubed/stook": "^0.0.4"
   },
