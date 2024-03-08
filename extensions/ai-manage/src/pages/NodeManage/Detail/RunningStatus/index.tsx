@@ -42,8 +42,7 @@ const { fetchMetrics } = useMonitorStore({ getApiFn: getApi });
 
 function RunningStatus() {
   const params: Record<string, any> = useParams();
-  // const { cluster } = params;
-  const cluster = 'host';
+  const { cluster } = params;
   const [detail] = useStore('detailProps');
   const { data: metrics, isLoading: isMonitorLoading } = useQuery(
     ['metrics', detail, params],

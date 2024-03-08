@@ -51,8 +51,7 @@ const Chart = styled(SimpleArea).attrs({
 
 function Monitorings() {
   const params: Record<string, any> = useParams();
-  // const { cluster } = params;
-  const cluster = 'host';
+  const { cluster } = params;
   const [detail] = useStore('detailProps');
   const { name, role = [], createTime } = detail;
   const [metrics, setMetrics] = useState<Record<string, any>>({});

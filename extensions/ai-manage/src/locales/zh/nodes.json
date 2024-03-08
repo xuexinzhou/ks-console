@@ -26,5 +26,12 @@
   "Compute IB Network Card Configuration": "计算 IB 网卡配置",
   "Number of Compute IB Network Cards": "计算 IB 网卡数量",
   "Storage IB Network Card Configuration": "存储 IB 网卡配置",
-  "Number of Storage IB Network Cards": "存储 IB 网卡数量"
+  "Number of Storage IB Network Cards": "存储 IB 网卡数量",
+  "Fault Log": "故障记录",
+  "Maintenance Log": "维护日志",
+  "Create New Log": "新建日志",
+  "Descriptions":"描述",
+  "No maintenance logs found":"未发现维护日志",
+  "Please create a new log":"请新建一个日志",
+  "No record of faults found":"未发现故障记录"
 }

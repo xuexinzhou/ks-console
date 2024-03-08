@@ -23,11 +23,10 @@ import { AttributesTitle } from './styles';
 const { nodeCordon, nodeUncordon, useGetMutation, useLabelMutation, useBatchPatchTaints } =
   nodeStore;
 
-const PATH = '/ai-manage/nodes/:name';
+const PATH = '/ai-manage/:cluster/nodes/:name';
 
 function NodeDetail() {
-  const cluster = 'host';
-  const { name } = useParams();
+  const { name, cluster } = useParams();
   const [taintVisible, setTaintVisible] = useState<boolean>(false);
   const [labelVisible, setLabelVisible] = useState<boolean>(false);
   const {
@@ -36,9 +35,9 @@ function NodeDetail() {
     isLoading,
     isError,
   } = useGetMutation({ name, cluster });
-
+console.log(detail)
   const [, setDetailProps] = useStore('detailProps', detail);
-  console.log(detail);
+
   useEffect(() => {
     setDetailProps(detail);
   }, [detail]);
@@ -51,12 +50,16 @@ function NodeDetail() {
           { path: `${PATH}/metadata`, title: t('METADATA') },
           { path: `${PATH}/monitors`, title: t('MONITORING') },
           { path: `${PATH}/events`, title: t('EVENT_PL') },
+          { path: `${PATH}/record`, title: t('Fault Log') },
+          { path: `${PATH}/log`, title: t('Maintenance Log') },
         ]
       : [
           { path: `${PATH}/status`, title: t('RUNNING_STATUS') },
           { path: `${PATH}/pods`, title: t('PODS') },
           { path: `${PATH}/metadata`, title: t('METADATA') },
           { path: `${PATH}/events`, title: t('EVENT_PL') },
+          { path: `${PATH}/record`, title: t('Fault Log') },
+          { path: `${PATH}/log`, title: t('Maintenance Log') },
         ];
 
   const status = useMemo(() => {
@@ -183,7 +186,7 @@ function NodeDetail() {
     const nodeInfo = detail.nodeInfo || {};
     return [
       {
-        label: t('Server Serial Number'),
+        label: t('CPU Model'),
         value: 'CPU 型号',
       },
       {
@@ -282,7 +285,7 @@ function NodeDetail() {
           icon: <Nodes size={28} />,
           breadcrumbs: {
             label: t('Node Manage'),
-            url: `/ai-manage/nodes`,
+            url: `/ai-manage/${cluster}/nodes`,
           },
           desc: detail?.description,
           customAttrs: (

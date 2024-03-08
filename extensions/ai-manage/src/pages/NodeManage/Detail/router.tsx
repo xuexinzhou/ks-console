@@ -6,11 +6,13 @@ import Pods from './Pods';
 import RunningStatus from './RunningStatus';
 import Events from './Events';
 import Monitorings from './Monitoring';
+import Record from './FaultRecord';
+import Log from './MaintenanceLog'
 
 const PATH = '/ai-manage';
 const routes: RouteObject[] = [
   {
-    path: `${PATH}/nodes/:name`,
+    path: `${PATH}/:cluster?/nodes/:name`,
     element: <NodesDetail />,
     children: [
       {
@@ -37,6 +39,14 @@ const routes: RouteObject[] = [
         path: 'events',
         element: <Events />,
       },
+      {
+        path: 'record',
+        element: <Record />,
+      },
+      {
+       path: 'log',
+       element: <Log />
+      }
     ],
   },
 ];

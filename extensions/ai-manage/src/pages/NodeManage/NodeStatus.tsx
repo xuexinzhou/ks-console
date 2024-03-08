@@ -2,6 +2,7 @@ import React from 'react';
 
 import { Text } from '@ks-console/shared';
 import { Card, Row, Field } from '@kubed/components';
+import { GPU, Service } from '../../icons';
 
 import {
   StyledCol,
@@ -12,6 +13,7 @@ import {
   StatusColor,
   ProgressBarContainer,
   ProgressBlock,
+  IconWrap
 } from './style';
 
 const ProgressBar = ({ data }: any) => {
@@ -44,12 +46,28 @@ function NodeStatus() {
             </StyledCol>
             <StyledCol span={4}>
               <BgColor>
-                <Text icon="nodes" title={800} description="GPU" />
+                <Text
+                  icon={() => (
+                    <IconWrap>
+                      <GPU />
+                    </IconWrap>
+                  )}
+                  title={800}
+                  description="GPU"
+                />
               </BgColor>
             </StyledCol>
             <StyledCol span={4}>
               <BgColor>
-                <Text icon="nodes" title={788} description="控制平面节点" />
+                <Text
+                  icon={() => (
+                    <IconWrap>
+                      <Service />
+                    </IconWrap>
+                  )}
+                  title={788}
+                  description="控制平面节点"
+                />
               </BgColor>
             </StyledCol>
           </Row>

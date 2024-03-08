@@ -11,13 +11,13 @@ export default [
     path: '/ai-manage',
     element: <Layout />,
     children: [
-      { path: '', element: <Dashboard /> },
+      { path: '', element: <Layout /> },
       {
-        path: 'dashboard',
+        path: ':cluster/dashboard',
         element: <Dashboard />,
       },
       {
-        path: 'nodes',
+        path: ':cluster/nodes',
         element: <NodeManage />,
       },
     ],

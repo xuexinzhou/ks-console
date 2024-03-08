@@ -1541,19 +1541,19 @@
     xterm-addon-fit "^0.7.0"
     yet-another-react-lightbox "^3.12.0"
 
-"@kubed/charts@^0.0.14":
-  version "0.0.14"
-  resolved "https://registry.npmmirror.com/@kubed/charts/-/charts-0.0.14.tgz#b3fd03c57e09ee9b0a036997eb8552eb5930b4df"
-  integrity sha512-frIsvSORzfHpJ8EHSTVJP6xBjwBQ447ohx9AZbyzeD9synpX3PEIBZOY///k+mdZTYM2nvUwmPLgMsy6MavmDg==
+"@kubed/charts@^0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@kubed/charts/-/charts-0.0.18.tgz#3c6c914d069c7ae01ea47b8e253da98d777cee65"
+  integrity sha512-ak52T1A1tz5p1eHp51ZNCUxMAleplbkGhCg9HLvjri87xc4rWcTAf6hAOMvW//lVoseahToTpN0JXzCM18pCvA==
   dependencies:
     lodash "^4.17.21"
     recharts "^2.3.2"
     styled-components "^5.3.0"
 
-"@kubed/code-editor@^0.0.20":
-  version "0.0.20"
-  resolved "https://registry.npmmirror.com/@kubed/code-editor/-/code-editor-0.0.20.tgz#4efeb808397341c3b59e75c3e1b2d0b10332bf0c"
-  integrity sha512-U3BKFkrmZHpuRvBUix7uqEfOQxp4BPUE8V2IZJMCIOzN8Z2x3U17v+7bzukYk0hnDsF5gP9FXzOB+qiV1gZP5A==
+"@kubed/code-editor@^0.0.23":
+  version "0.0.23"
+  resolved "https://registry.yarnpkg.com/@kubed/code-editor/-/code-editor-0.0.23.tgz#7fc06f73727033a0771128955fb95f8870a9ea70"
+  integrity sha512-xok/XbKxoDcpUkuUPf841MM44U5blIl5dNlb16d5ZzJwJlFua2XRaJ33JmO302HGkVDV+59aXohs8q0DIhcE0w==
   dependencies:
     ace-builds "^1.12.5"
     file-saver "^2.0.5"
@@ -1562,10 +1562,10 @@
     react-file-reader "^1.1.4"
     styled-components "^5.3.0"
 
-"@kubed/components@^0.0.81":
-  version "0.0.81"
-  resolved "https://registry.npmmirror.com/@kubed/components/-/components-0.0.81.tgz#e59ad1eef50d5566aad5ebdceb289d5ebffe671a"
-  integrity sha512-2i2LCxyKgOgJ/M4Er/eAPjI1+LHg2IfaLZ4mmfH6ZdiIROxhkB0TOT4psonpD2WgngkCOWIa2wY1YSOXJ+bF8g==
+"@kubed/components@^0.0.87":
+  version "0.0.87"
+  resolved "https://registry.yarnpkg.com/@kubed/components/-/components-0.0.87.tgz#25d7420bfea892438c22f5c5421cd5edbf999aa0"
+  integrity sha512-MSw5LUI0B1gc/8A7Ap1bnpm4b3RON0MBJ4Rgy+5CAVKKm7n2ylNgX8bspSrLMFcZsm8XRoS6qWBaCAnQmVRZKQ==
   dependencies:
     "@tippyjs/react" "^4.2.5"
     classnames "^2.3.1"
@@ -1587,10 +1587,10 @@
     styled-components "^5.3.0"
     tippy.js "^6.3.7"
 
-"@kubed/diff-viewer@^0.0.15":
-  version "0.0.15"
-  resolved "https://registry.npmmirror.com/@kubed/diff-viewer/-/diff-viewer-0.0.15.tgz#0ad9e8e12b233ed9ccbb983a5d8678bd76d1a67d"
-  integrity sha512-Y75HaV6EMd60O4UlRcHrvc5CC/l5PblxhZkUrgRwMjwr5D62zrq/M7TIpKZRTCKHJcTC6DtXMd4yVOMe+XDg3g==
+"@kubed/diff-viewer@^0.0.18":
+  version "0.0.18"
+  resolved "https://registry.yarnpkg.com/@kubed/diff-viewer/-/diff-viewer-0.0.18.tgz#9bb468af90ec66395e19ec4e2fbd412ea5791a05"
+  integrity sha512-Bwdr/vHkjZxNlfq4QCIJqV//xtTU2AMa4znJ1nnR9f6JqiHGx1HYaokxh/T7iq6o61ErlxrjbTos8UVc/d3aGw==
   dependencies:
     diff "^5.1.0"
     diff2html "^3.4.22"
@@ -1607,10 +1607,10 @@
   resolved "https://registry.npmmirror.com/@kubed/icons/-/icons-0.0.16.tgz#7925ff932a92cc6b145dd212e141c1a04ebaf7e2"
   integrity sha512-5ODsTMmitK6NLKqY7qxNZWSPqARb21Vrd0Ho5F1JFKJtyxs7mzKo145KnQ6t55298GTsAhCgatA0iB1zxM0v/Q==
 
-"@kubed/log-viewer@^0.0.14":
-  version "0.0.14"
-  resolved "https://registry.npmmirror.com/@kubed/log-viewer/-/log-viewer-0.0.14.tgz#0f9fcdb5518b39763ded39cd72fb13bde5f5de37"
-  integrity sha512-lQoHacRoffTuF7W1ZLPXCXAXBDMPYt1wL7FduvgMKzFOMX/bJ+Z1oHIJawJ00SeX/Vrx4VR2tfKo3c6G5TxBXg==
+"@kubed/log-viewer@^0.0.17":
+  version "0.0.17"
+  resolved "https://registry.yarnpkg.com/@kubed/log-viewer/-/log-viewer-0.0.17.tgz#7b176f4f64e7b65f9fcb5fbf0d121189f48f829d"
+  integrity sha512-gZb06fi67MruMmzbpCTz6N0koMzeYSDnr7qaY+N8b0dlZFqQhmeX0CkmSim9eKmhbtI+/a3VVH32AHbncuhQNQ==
   dependencies:
     anser "^2.1.1"
     escape-carriage "^1.3.0"

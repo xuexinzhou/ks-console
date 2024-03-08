@@ -2,8 +2,8 @@ import routes from './routes';
 import locales from './locales';
 
 const menu = {
-  parent: 'topbar',
-  name: 'ai-manage/dashboard',
+  parent: 'global',
+  name: 'ai-manage',
   title: 'AI_MANAGE',
   icon: 'computing',
   order: 0,

@@ -13,6 +13,7 @@ export const Columns = styled.div`
   display: flex;
   gap: 12px;
   margin-bottom: 12px;
+  margin-right: 12px;
 `;
 
 export const BgColor = styled.div`
@@ -121,3 +122,8 @@ export const Resource = styled.div`
     fill: #ea4641;
   }
 `;
+
+export const IconWrap = styled.div`
+  height: 40px;
+  margin-right: 12px;
+`

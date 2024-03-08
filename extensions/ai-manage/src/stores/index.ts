@@ -1,1 +1,3 @@
-export * from './node';
+// export * from './node';
+
+export { default as BaseStore } from './base';

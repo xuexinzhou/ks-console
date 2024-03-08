@@ -16,7 +16,7 @@ import {
   KubectlModal
 } from '@ks-console/shared';
 
-import NodeStatus from './NodeStatus';
+import NodeStatus from './nodeStatus';
 import { getColumns } from './columns';
 
 import {
@@ -41,7 +41,7 @@ const { useMonitorStore, apiVersion } = monitorStore;
 
 function NodeManage() {
   const tableRef = useRef<TableRef>();
-  const [tab, seTtab] = useState('status');
+  const [tab, seTtab] = useState('monitor');
   const [kubeCtlVisible, setKubeCtlVisible] = useState<boolean>(false);
   const [kubeCtlParams, setKubeCtlParams] = useState<Record<string, any>>({});
   const params: Record<string, any> = useParams();
@@ -123,7 +123,7 @@ function NodeManage() {
     ['monitor', tableList],
     () => {
       // 临时取反，为了获取到数据，记得改回来
-      if (!hasClusterModule(cluster, 'whizard-monitoring') && !isEmpty(tableList)) {
+      if (hasClusterModule(cluster, 'whizard-monitoring') && !isEmpty(tableList)) {
         return fetchMetrics({
           cluster,
           resources: tableList.map((node: any) => node.name),
