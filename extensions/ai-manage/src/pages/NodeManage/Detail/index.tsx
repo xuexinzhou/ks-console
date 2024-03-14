@@ -35,11 +35,13 @@ function NodeDetail() {
     isLoading,
     isError,
   } = useGetMutation({ name, cluster });
-console.log(detail)
+
   const [, setDetailProps] = useStore('detailProps', detail);
 
   useEffect(() => {
-    setDetailProps(detail);
+    if (detail.name) {
+      setDetailProps(detail);
+    }
   }, [detail]);
 
   const tabs =

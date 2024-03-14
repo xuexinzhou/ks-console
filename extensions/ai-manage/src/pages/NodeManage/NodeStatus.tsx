@@ -1,6 +1,10 @@
-import React from 'react';
-
+import React, { useMemo } from 'react';
+import { useQuery } from 'react-query';
 import { Text } from '@ks-console/shared';
+import { nodeStore, request } from '@ks-console/shared';
+import { useParams } from 'react-router-dom';
+import { useStore } from '@kubed/stook';
+
 import { Card, Row, Field } from '@kubed/components';
 import { GPU, Service } from '../../icons';
 
@@ -13,8 +17,14 @@ import {
   StatusColor,
   ProgressBarContainer,
   ProgressBlock,
-  IconWrap
+  IconWrap,
 } from './style';
+
+interface ItemData {
+  [key: string]: string | number;
+}
+
+const { fetchCount } = nodeStore;
 
 const ProgressBar = ({ data }: any) => {
   return (
@@ -26,13 +36,51 @@ const ProgressBar = ({ data }: any) => {
   );
 };
 
+const statusMap: ItemData[] = [
+  { key: 'Ready', value: 96, label: '正常', className: '' },
+  { key: 'NotReady', value: 5, label: '异常', className: 'err' },
+  { key: 'Unavailable', value: 2, label: '未就绪', className: 'off' },
+];
+
 function NodeStatus() {
-  const status = [
-    { value: 96, label: '正常', className: '' },
-    { value: 5, label: '异常', className: 'err' },
-    { value: 3, label: '修复中', className: 'info' },
-    { value: 2, label: '已下线', className: 'off' },
-  ];
+  const { cluster } = useParams();
+
+  const [nodeTotlaCount] = useStore('nodeCount');
+
+  const { data: nodeCount } = useQuery(['fetchCount'], () => {
+    return fetchCount({ cluster });
+  });
+
+  const { data } = useQuery(['fetchStatus'], async () => {
+    return await request.get('/kapis/aicp.kubesphere.io/v1/gpu/get_node_status').then(res => {
+      if ((res as any)?.ret_code === 0) {
+        return res?.data ?? {};
+      }
+    });
+  });
+
+  const percentages = useMemo(() => {
+    const result: ItemData = {};
+    if (data) {
+      let total: number = 0;
+
+      // 计算总量
+      for (const key in data) {
+        if (key && key !== 'NumGpu') {
+          total += data[key];
+        }
+      }
+
+      // 计算每个项的百分比
+
+      for (const key in data) {
+        const percentage = data[key] / total;
+        result[key] = percentage;
+      }
+    }
+    return result;
+  }, [data]);
+
   return (
     <Columns>
       <ColumnItem>
@@ -41,7 +89,7 @@ function NodeStatus() {
           <Row>
             <StyledCol span={4}>
               <BgColor>
-                <Text icon="nodes" title={100} description="节点" />
+                <Text icon="nodes" title={nodeTotlaCount ?? 0} description="节点" />
               </BgColor>
             </StyledCol>
             <StyledCol span={4}>
@@ -52,7 +100,7 @@ function NodeStatus() {
                       <GPU />
                     </IconWrap>
                   )}
-                  title={800}
+                  title={data?.NumGpu ?? 0}
                   description="GPU"
                 />
               </BgColor>
@@ -65,7 +113,7 @@ function NodeStatus() {
                       <Service />
                     </IconWrap>
                   )}
-                  title={788}
+                  title={nodeCount?.masterNum ?? 0}
                   description="控制平面节点"
                 />
               </BgColor>
@@ -77,11 +125,11 @@ function NodeStatus() {
         <Card>
           <TextName>节点服务状态</TextName>
           <Row>
-            {status.map((item, index) => (
-              <StyledCol key={index} span={3}>
+            {statusMap.map((item: any, index) => (
+              <StyledCol key={index} span={4}>
                 <BgColor className="padding4">
                   <Field
-                    value={item.value}
+                    value={data?.[item.key] ?? 0}
                     label={<StatusColor className={item.className}>{item.label}</StatusColor>}
                   />
                 </BgColor>
@@ -90,10 +138,9 @@ function NodeStatus() {
           </Row>
           <ProgressBar
             data={[
-              { percentage: 90, color: '#55BC8A' }, // 红色
-              { percentage: 5, color: '#CA2621' }, // 黄色
-              { percentage: 3, color: '#329DCE' }, // 绿色
-              { percentage: 2, color: '#79879C' }, // 蓝色
+              { percentage: percentages?.Ready ?? 0, color: '#55BC8A' },
+              { percentage: percentages?.NotReady?? 0, color: '#CA2621' },
+              { percentage: percentages?.Unavailable ?? 0, color: '#79879C' },
             ]}
           />
         </Card>

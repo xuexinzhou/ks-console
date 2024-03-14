@@ -10,7 +10,6 @@
   "computational network": "计算网络",
   "Storage network": "存储网络",
   "Cluster": "所属集群",
-  "Belonging Compute Pool:": "所属计算池",
   "Server Manufacturer": "服务器厂商",
   "Server Model": "服务器型号",
   "Server Serial Number": "服务器序列号",
@@ -30,8 +29,16 @@
   "Fault Log": "故障记录",
   "Maintenance Log": "维护日志",
   "Create New Log": "新建日志",
-  "Descriptions":"描述",
-  "No maintenance logs found":"未发现维护日志",
-  "Please create a new log":"请新建一个日志",
-  "No record of faults found":"未发现故障记录"
+  "Descriptions": "描述",
+  "No maintenance logs found": "未发现维护日志",
+  "Please create a new log": "请新建一个日志",
+  "No record of faults found": "未发现故障记录",
+  "Node Name": "节点名称 / ID",
+  "Please enter the description点击并应用": "请输入描述信息",
+  "GPU Status": "GPU 状态",
+  "Normal": "正常",
+  "Abnormal": "异常",
+  "Unknown": "未知错误",
+  "GPU utilization": "GPU 利用率",
+  "GPU memory utilization": "GPU 显存利用率"
 }

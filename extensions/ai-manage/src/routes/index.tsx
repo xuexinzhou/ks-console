@@ -1,6 +1,7 @@
 import React from 'react';
 
 import Layout from '../components/Layout';
+import Overview from '../pages/Overview';
 import Dashboard from '../pages/Dashboard';
 import NodeManage from '../pages/NodeManage';
 
@@ -12,6 +13,10 @@ export default [
     element: <Layout />,
     children: [
       { path: '', element: <Layout /> },
+      {
+        path: ':cluster/overview',
+        element: <Overview />,
+      },
       {
         path: ':cluster/dashboard',
         element: <Dashboard />,

@@ -1,9 +1,10 @@
 export const navs = [
   {
-    name: 'dashboard',
+    name: 'overview',
     title: '',
     children: [
-      { name: 'dashboard', title: 'Dashboard', icon: 'dashboard' },
+      { name: 'overview', title: 'Dashboard', icon: 'dashboard' },
+      { name: 'dashboard', title: 'Monitor Dashboard', icon: 'monitor' },
       // {
       //   name: 'monitor-dashboard',
       //   title: 'Monitor Dashboard',

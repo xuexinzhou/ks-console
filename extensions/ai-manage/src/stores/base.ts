@@ -74,10 +74,20 @@ function useFetchClusterList(options?: Partial<UseListOptions<FormattedCluster>>
   return { ...result, formattedClusters };
 }
 
+function useFetchGPUMonitorList(options?: UseListOptions<any>) {
+  const params = options?.params ?? {};
+  const mode = options?.mode;
+  // params.url = 'aicp/gpu/list_gpu_dev_info';
+  const result = fetchList(params, { mode });
+  const formattedClusters = result.data ?? [];
+  return { ...result, formattedClusters };
+}
+
 const BaseStore = {
   defaultUrl,
   fetchList,
-  useFetchClusterList
+  useFetchClusterList,
+  useFetchGPUMonitorList
 }
 
 export default BaseStore;
