@@ -208,7 +208,7 @@ function NodeDetail() {
       },
       {
         label: t('Memory'),
-        value: node?.node_memory ?? '-',
+        value: !isUndefined(node?.node_memory) ? `${node?.node_memory}G` : '-',
       },
       {
         label: t('GPU Model'),
@@ -223,8 +223,8 @@ function NodeDetail() {
         value: node?.node_gpu ?? '-',
       },
       {
-        label: t('NVLINK Quantity'),
-        value: !isUndefined(node?.nvlink) ? (node?.nvlink ? '是' : '否') : '-',
+        label: t('Availability of NVLINK'),
+        value: !isUndefined(node?.nvlink) ? (node?.nvlink ? t('YES') : t('NO')) : '-',
       },
       {
         label: t('Compute IB Network Card Configuration'),

@@ -5,6 +5,7 @@ import { isEmpty, get } from 'lodash';
 
 import { Tooltip, Field, notify } from '@kubed/components';
 import {
+  request,
   ClusterDetail,
   Column,
   DataTable,
@@ -109,6 +110,26 @@ function Node({ renderTabs }: Props) {
   );
 
   const tableRef = useRef<TableRef>();
+
+  const { data: computedGroup } = useQuery(
+    ['computed_group', tableList],
+    () => {
+      const url = '/kapis/aicp.kubesphere.io/v1/gpu/get_compute_group_by_node_ids?';
+      const ids = (tableList || [])?.map((node: any) => node.name);
+      const idsStr = ids?.map((id: string) => `&node_ids=${id}`).join('');
+      return request(`${url}${idsStr}`).then(res => {
+        if ((res as any)?.ret_code === 0) {
+          const transformedData = (res?.data ?? []).reduce((result: any, item: any) => {
+            const { gpu_node_id, ...rest } = item;
+            result[gpu_node_id] = { gpu_node_id, ...rest };
+            return result;
+          }, {});
+          return transformedData;
+        }
+      });
+    },
+    { enabled: !!tableList?.length },
+  );
 
   const { data: monitorData } = useQuery(
     ['monitor', tableList],
@@ -348,6 +369,12 @@ function Node({ renderTabs }: Props) {
       ),
     },
     {
+      title: t('ROLE'),
+      field: 'role',
+      canHide: true,
+      render: roles => (roles.indexOf('master') === -1 ? t('WORKER') : t('CONTROL_PLANE')),
+    },
+    {
       title: t('STATUS'),
       field: 'status',
       canHide: true,
@@ -369,10 +396,12 @@ function Node({ renderTabs }: Props) {
       },
     },
     {
-      title: t('ROLE'),
-      field: 'role',
+      title: t('Belonging Compute Pool'),
+      field: 'gpu_node_compute_group',
       canHide: true,
-      render: roles => (roles.indexOf('master') === -1 ? t('WORKER') : t('CONTROL_PLANE')),
+      render: (_v, row) => {
+        return computedGroup?.[row?.name]?.gpu_node_compute_group || '-';
+      },
     },
     ...(hasClusterModule(cluster, 'whizard-monitoring')
       ? ([

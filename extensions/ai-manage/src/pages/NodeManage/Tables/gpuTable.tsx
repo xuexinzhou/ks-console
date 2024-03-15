@@ -52,14 +52,9 @@ function GpuTable({ renderTabs }: Props) {
     },
     {
       title: t('Belonging Compute Pool'),
-      field: 'gpu_node_resource',
+      field: 'gpu_node_compute_group',
       canHide: true,
-      render: (v, row) => (
-        <Field
-          value={v}
-          label={<FieldLabel>{row.gpu_node_resource_id || '-'}</FieldLabel>}
-        />
-      ),
+      render: (v, row) => v ?? '-',
     },
     {
       title: t('GPU UUID'),
