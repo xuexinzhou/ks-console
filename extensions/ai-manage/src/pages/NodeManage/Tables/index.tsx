@@ -3,10 +3,11 @@ import { useStore } from '@kubed/stook';
 
 import MonitorTable from './monitorTable';
 import GpuTable from './gpuTable';
+import ListTable from './listTable';
 import { TableContent, StyledNav, HiddendNav } from './styles';
 
 function TableWrap() {
-  const [tab, setTab] = useStore('current_tab','monitor');
+  const [tab, setTab] = useStore('current_tab', 'monitor');
 
   const pageTabs = [
     {
@@ -33,9 +34,9 @@ function TableWrap() {
   return (
     <TableContent>
       <StyledNav data={navs} value={tab} onChange={v => setTab(v)} />
-      {tab === 'monitor' ? <MonitorTable renderTabs={defaultTabs} /> : null}
-      {tab === 'list' && <MonitorTable renderTabs={defaultTabs} />}
-      {tab === 'gpu' ? <GpuTable renderTabs={defaultTabs} /> : null}
+      {tab === 'monitor' && <MonitorTable renderTabs={defaultTabs} />}
+      {tab === 'list' && <ListTable renderTabs={defaultTabs} />}
+      {tab === 'gpu' && <GpuTable renderTabs={defaultTabs} />}
     </TableContent>
   );
 }

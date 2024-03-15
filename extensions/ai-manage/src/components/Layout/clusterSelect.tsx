@@ -53,7 +53,7 @@ function ClusterSelect(): JSX.Element {
       const defaultValue = (data?.[0] as any)?.value;
       setValue(defaultValue);
       setDetailProps(data?.[0]);
-      navigate(`/ai-manage/${defaultValue}/dashboard`);
+      navigate(`/ai-manage/${defaultValue}/overview`);
     }
   }, [data, cluster]);
 

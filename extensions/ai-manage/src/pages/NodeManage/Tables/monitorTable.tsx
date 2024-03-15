@@ -41,6 +41,10 @@ import {
   getReady,
 } from './contants';
 
+interface Props {
+  renderTabs: () => React.ReactNode;
+}
+
 const hasExtensionModuleAnnotation = (module: string, annotation: string) => {
   return (
     get(
@@ -79,7 +83,7 @@ const renderTaintsTip = (data: Record<string, string>[]) => (
   </div>
 );
 
-function Node({ renderTabs }: any) {
+function Node({ renderTabs }: Props) {
   const params: Record<string, any> = useParams();
   const { cluster } = params;
   const [currentCluster] = useStore<ClusterDetail>('cluster');

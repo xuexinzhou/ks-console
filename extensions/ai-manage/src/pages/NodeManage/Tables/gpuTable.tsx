@@ -10,13 +10,17 @@ interface StatusMap {
   [key: string]: string;
 }
 
+interface Props {
+  renderTabs: () => React.ReactNode;
+}
+
 const statusMap: StatusMap = {
   '0': 'Normal',
   '2': 'Abnormal',
   '1': 'Unknown',
 };
 
-function GpuTable({ renderTabs }: any) {
+function GpuTable({ renderTabs }: Props) {
   const columns: Column[] = [
     {
       title: t('Node Name'),
@@ -50,6 +54,12 @@ function GpuTable({ renderTabs }: any) {
       title: t('Belonging Compute Pool'),
       field: 'gpu_node_resource',
       canHide: true,
+      render: (v, row) => (
+        <Field
+          value={v}
+          label={<FieldLabel>{row.gpu_node_resource_id || '-'}</FieldLabel>}
+        />
+      ),
     },
     {
       title: t('GPU UUID'),

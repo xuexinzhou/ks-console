@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { get } from 'lodash';
+import { get, isUndefined } from 'lodash';
 import {
+  request,
   StatusIndicator,
   DetailPagee,
   nodeStore,
@@ -15,6 +16,8 @@ import {
 import { Nodes, Start, Stop, Wrench, Pen } from '@kubed/icons';
 import { Loading, notify, Descriptions } from '@kubed/components';
 import { useStore } from '@kubed/stook';
+import { useQuery } from 'react-query';
+
 import { authKey } from '../contants';
 import { TaintSingleModal } from '../TaintModal/TaintSingleModal';
 import ObjectEditModal from '../ObjectEdit';
@@ -38,14 +41,29 @@ function NodeDetail() {
 
   const [, setDetailProps] = useStore('detailProps', detail);
 
+  const { data: node } = useQuery(
+    ['fetchNodeInfo'],
+    async () => {
+      return await request
+        .get(`/kapis/aicp.kubesphere.io/v1/gpu/get_node_static_info?node_id=${name}`)
+        .then(res => {
+          if ((res as any)?.ret_code === 0) {
+            return res?.data ?? {};
+          }
+        });
+    },
+    { enabled: !!name },
+  );
+
   useEffect(() => {
     if (detail.name) {
       setDetailProps(detail);
     }
   }, [detail]);
 
+  // 别忘了改回来
   const tabs =
-    cluster && hasClusterModule(cluster, 'whizard-monitoring')
+    cluster && !hasClusterModule(cluster, 'whizard-monitoring')
       ? [
           { path: `${PATH}/status`, title: t('RUNNING_STATUS') },
           { path: `${PATH}/pods`, title: t('PODS') },
@@ -142,94 +160,87 @@ function NodeDetail() {
   };
 
   const getBaseInfoAttrs = () => {
-    const nodeInfo = detail.nodeInfo || {};
-
     return [
       {
         label: t('Cluster'),
-        value: nodeInfo?.cluster ?? '',
+        value: node?.node_cluster ?? '-',
       },
       {
         label: t('Belonging Compute Pool'),
-        value: '-',
-      },
-      {
-        label: t('Server Status'),
-        value: status,
+        value: node?.node_compute_group ?? '-',
       },
       {
         label: 'IPM IP',
-        value: '-',
+        value: node?.node_ipmi_ip ?? '-',
       },
       {
         label: t('Server Manufacturer'),
-        value: '-',
+        value: node?.node_product_company ?? '-',
       },
       {
         label: t('Server Model'),
-        value: '-',
+        value: node?.node_hardware_model ?? '-',
       },
       {
         label: t('Server Serial Number'),
-        value: '-',
+        value: node?.node_serial_number ?? '-',
       },
       {
         label: t('Computer room'),
-        value: '-',
+        value: node?.node_zone ?? '-',
       },
       {
         label: t('Cabinet'),
-        value: '-',
+        value: node?.node_location_number ?? '-',
       },
     ];
   };
 
   const getConfigInfoAttrs = () => {
-    const nodeInfo = detail.nodeInfo || {};
     return [
       {
         label: t('CPU Model'),
-        value: 'CPU 型号',
+        value: node?.node_cpu_model ?? '-',
       },
       {
         label: t('CPU cores'),
-        value: '-',
+        value: node?.node_cpu ?? '-',
       },
       {
         label: t('Memory'),
-        value: '-',
+        value: node?.node_memory ?? '-',
       },
       {
         label: t('GPU Model'),
-        value: '-',
+        value: node?.node_gpu_model ?? '-',
       },
       {
         label: t('GPU Memory'),
-        value: '-',
+        value: node?.node_gpu_memory ?? '-',
       },
       {
         label: t('Number of GPU Cards'),
-        value: '-',
+        value: node?.node_gpu ?? '-',
       },
       {
         label: t('NVLINK Quantity'),
-        value: '-',
+        value: !isUndefined(node?.nvlink) ? (node?.nvlink ? '是' : '否') : '-',
       },
       {
         label: t('Compute IB Network Card Configuration'),
-        value: '-',
+        value: !isUndefined(node?.node_ib_count_compute) ? `${node?.node_ib_count_compute}G` : '-',
       },
       {
         label: t('Number of Compute IB Network Cards'),
-        value: '-',
+        value: node?.node_ib_bw_storage ?? '-',
       },
       {
         label: t('Storage IB Network Card Configuration'),
-        value: '-',
+        value: !isUndefined(node?.node_ib_bw_storage) ? `${node?.node_ib_bw_storage}G` : '-',
       },
       {
         label: t('Number of Storage IB Network Cards'),
-        value: '-',
+        value: node?.node_ib_count_storage ?? '-',
       },
     ];
   };

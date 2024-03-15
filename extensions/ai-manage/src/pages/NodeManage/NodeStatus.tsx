@@ -36,14 +36,14 @@ const ProgressBar = ({ data }: any) => {
   );
 };
 
-const statusMap: ItemData[] = [
-  { key: 'Ready', value: 96, label: '正常', className: '' },
-  { key: 'NotReady', value: 5, label: '异常', className: 'err' },
-  { key: 'Unavailable', value: 2, label: '未就绪', className: 'off' },
-];
-
 function NodeStatus() {
   const { cluster } = useParams();
+
+  const statusMap: ItemData[] = [
+    { key: 'Ready', value: 96, label: t('Normal'), className: '' },
+    { key: 'NotReady', value: 5, label: t('Abnormal'), className: 'err' },
+    { key: 'Unavailable', value: 2, label: t('Not ready'), className: 'off' },
+  ];
 
   const [nodeTotlaCount] = useStore('nodeCount');
 
@@ -85,11 +85,11 @@ function NodeStatus() {
     <Columns>
       <ColumnItem>
         <Card className="flex">
-          <TextName>节点数量</TextName>
+          <TextName>{t('Number of nodes')}</TextName>
           <Row>
             <StyledCol span={4}>
               <BgColor>
-                <Text icon="nodes" title={nodeTotlaCount ?? 0} description="节点" />
+                <Text icon="nodes" title={nodeTotlaCount ?? 0} description={t('Node')} />
               </BgColor>
             </StyledCol>
             <StyledCol span={4}>
@@ -114,7 +114,7 @@ function NodeStatus() {
                     </IconWrap>
                   )}
                   title={nodeCount?.masterNum ?? 0}
-                  description="控制平面节点"
+                  description={t('Control plane node')}
                 />
               </BgColor>
             </StyledCol>
@@ -123,7 +123,7 @@ function NodeStatus() {
       </ColumnItem>
       <ColumnItem>
         <Card>
-          <TextName>节点服务状态</TextName>
+          <TextName>{t('Node service status')}</TextName>
           <Row>
             {statusMap.map((item: any, index) => (
               <StyledCol key={index} span={4}>
@@ -139,7 +139,7 @@ function NodeStatus() {
           <ProgressBar
             data={[
               { percentage: percentages?.Ready ?? 0, color: '#55BC8A' },
-              { percentage: percentages?.NotReady?? 0, color: '#CA2621' },
+              { percentage: percentages?.NotReady ?? 0, color: '#CA2621' },
               { percentage: percentages?.Unavailable ?? 0, color: '#79879C' },
             ]}
           />

@@ -38,7 +38,8 @@
   "GPU Status": "GPU 状态",
   "Normal": "正常",
   "Abnormal": "异常",
-  "Unknown": "未知错误",
+  "Unknown": "未知",
   "GPU utilization": "GPU 利用率",
-  "GPU memory utilization": "GPU 显存利用率"
+  "GPU memory utilization": "GPU 显存利用率",
+  "Not ready": "未就绪"
 }

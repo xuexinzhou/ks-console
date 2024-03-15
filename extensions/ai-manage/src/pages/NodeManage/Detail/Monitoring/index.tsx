@@ -78,6 +78,20 @@ function Monitorings() {
     /* TODO: missing INODE_USAGE */
   }
   const monitoringCfgs = [
+    // {
+    //   type: 'utilisation1',
+    //   title: 'GPU 使用率',
+    //   unit: '%',
+    //   legend: ['GPU_USAGE'],
+    //   data: get(metrics, `${MetricTypes.cpu_utilisation}.data.result`, []),
+    // },
+    // {
+    //   type: 'utilisation2',
+    //   title: 'GPU 显存使用率',
+    //   unit: '%',
+    //   legend: ['GPU_USAGE2'],
+    //   data: get(metrics, `${MetricTypes.cpu_utilisation}.data.result`, []),
+    // },
     {
       type: 'utilisation',
       title: 'CPU_USAGE',
