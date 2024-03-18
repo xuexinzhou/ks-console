@@ -8,6 +8,7 @@ import { TableContent, StyledNav, HiddendNav } from './styles';
 
 function TableWrap() {
   const [tab, setTab] = useStore('current_tab', 'monitor');
+  const [showTab, setShowTab] = useState(true);
 
   const pageTabs = [
     {
@@ -33,8 +34,8 @@ function TableWrap() {
 
   return (
     <TableContent>
-      <StyledNav data={navs} value={tab} onChange={v => setTab(v)} />
-      {tab === 'monitor' && <MonitorTable renderTabs={defaultTabs} />}
+      {showTab && <StyledNav data={navs} value={tab} onChange={v => setTab(v)} />}
+      {tab === 'monitor' && <MonitorTable renderTabs={defaultTabs} setShowTab={setShowTab} />}
       {tab === 'list' && <ListTable renderTabs={defaultTabs} />}
       {tab === 'gpu' && <GpuTable renderTabs={defaultTabs} />}
     </TableContent>

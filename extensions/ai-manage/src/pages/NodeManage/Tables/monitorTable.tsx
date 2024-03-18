@@ -44,6 +44,7 @@ import {
 
 interface Props {
   renderTabs: () => React.ReactNode;
+  setShowTab: (v: boolean) => void;
 }
 
 const hasExtensionModuleAnnotation = (module: string, annotation: string) => {
@@ -84,7 +85,7 @@ const renderTaintsTip = (data: Record<string, string>[]) => (
   </div>
 );
 
-function Node({ renderTabs }: Props) {
+function Node({ renderTabs, setShowTab }: Props) {
   const params: Record<string, any> = useParams();
   const { cluster } = params;
   const [currentCluster] = useStore<ClusterDetail>('cluster');
@@ -473,7 +474,7 @@ function Node({ renderTabs }: Props) {
           ) && hasClusterModule(cluster, 'whizard-monitoring')
             ? ([
                 {
-                  title: t('GPU_USAGE'),
+                  title: t('GPU utilization'),
                   field: 'gpu',
                   canHide: true,
                   render: (value, row) => {
@@ -498,7 +499,7 @@ function Node({ renderTabs }: Props) {
                             {metrics.gpu_utilization >= 0.9 && <Exclamation />}
                           </Resource>
                         }
-                        label={`${metrics.gpu_used}/${metrics.gpu_total} ${t('CORE_PL')}`}
+                        // label={`${metrics.gpu_used}/${metrics.gpu_total} ${t('CORE_PL')}`}
                       />
                     );
                   },
@@ -606,7 +607,10 @@ function Node({ renderTabs }: Props) {
         toolbarRight={currentCluster.kkName ? renderTableAction() : null}
         format={(item: any) => ({ ...params, ...nodeMapper(item) })}
         initialState={{ sortBy: [{ id: 'name', desc: false }] }}
-        toolbarLeft={renderTabs()}
+        toolbarLeft={renderTabs}
+        onSelect={(_v: any, rows: any) => {
+          setShowTab?.(!rows?.length);
+        }}
       />
 
       {taintVisible && (

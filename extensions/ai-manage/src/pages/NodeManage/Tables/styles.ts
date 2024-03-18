@@ -9,7 +9,7 @@ export const StyledNav = styled(Navs)`
   position: absolute;
   left: 20px;
   top: 10px;
-  z-index: 199;
+  z-index: 188;
 `;
 
 export const HiddendNav = styled(Navs)`
