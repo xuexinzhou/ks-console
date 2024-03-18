@@ -61,9 +61,9 @@ function NodeDetail() {
     }
   }, [detail]);
 
-  // 别忘了改回来
+
   const tabs =
-    cluster && !hasClusterModule(cluster, 'whizard-monitoring')
+    cluster && hasClusterModule(cluster, 'whizard-monitoring')
       ? [
           { path: `${PATH}/status`, title: t('RUNNING_STATUS') },
           { path: `${PATH}/pods`, title: t('PODS') },

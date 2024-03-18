@@ -1,3 +1,3 @@
 FROM nginx:alpine
 
-COPY dist /usr/share/nginx/html/dist/ai-manage-frontend
+COPY dist /usr/share/nginx/html/dist/aicp-frontend
