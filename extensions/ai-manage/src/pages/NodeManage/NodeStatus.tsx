@@ -1,11 +1,11 @@
 import React, { useMemo } from 'react';
 import { useQuery } from 'react-query';
-import { Text } from '@ks-console/shared';
+import { Icon, Text } from '@ks-console/shared';
 import { nodeStore, request } from '@ks-console/shared';
 import { useParams } from 'react-router-dom';
 import { useStore } from '@kubed/stook';
 
-import { Card, Row, Field } from '@kubed/components';
+import { Card, Row, Field, Tooltip } from '@kubed/components';
 import { GPU, Service } from '../../icons';
 
 import {
@@ -81,6 +81,23 @@ function NodeStatus() {
     return result;
   }, [data]);
 
+  const renderStatusTip = () => {
+    return (
+      <div>
+        <div>{'正常： 绿'}</div>
+        <div>{'Ready(就绪)'}</div>
+        <div className='mt12'>{'未就绪：灰'}</div>
+        <div>{'NotReady (未就绪)'}</div>
+        <div>{'异常：红'}</div>
+        <div className='mt12'>{'Unreachable (不可达)'}</div>
+        <div>{'OutofDisk(磁盘空间不足)'}</div>
+        <div>{'MemoryPressure(内存压力)'}</div>
+        <div>{'DiskPressure(磁盘压力)'}</div>
+        <div>{'NetworkUnavailable (网络不可用)'}</div>
+      </div>
+    );
+  };
+
   return (
     <Columns>
       <ColumnItem>
@@ -123,7 +140,12 @@ function NodeStatus() {
       </ColumnItem>
       <ColumnItem>
         <Card>
-          <TextName>{t('Node service status')}</TextName>
+          <TextName>
+            <span className="mr4">{t('STATUS')}</span>
+            <Tooltip content={renderStatusTip()}>
+              <Icon name="question" />
+            </Tooltip>
+          </TextName>
           <Row>
             {statusMap.map((item: any, index) => (
               <StyledCol key={index} span={4}>

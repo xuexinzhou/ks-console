@@ -27,10 +27,14 @@ export const BgColor = styled.div`
 `
 
 export const TextName = styled.div`
+  display: flex;
+  align-items: center;
   color: #79879C;
   font-size: 12px;
   margin-bottom: 8px;
-
+  .mr4 {
+    margin-right: 4px;
+  }
 `
 
 export const ColumnItem = styled.div`
