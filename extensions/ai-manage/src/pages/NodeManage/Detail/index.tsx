@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { get, isUndefined } from 'lodash';
+import { get, isNil } from 'lodash';
 import {
   request,
   StatusIndicator,
@@ -60,7 +60,6 @@ function NodeDetail() {
       setDetailProps(detail);
     }
   }, [detail]);
-
 
   const tabs =
     cluster && hasClusterModule(cluster, 'whizard-monitoring')
@@ -204,11 +203,11 @@ function NodeDetail() {
       },
       {
         label: t('CPU cores'),
-        value: node?.node_cpu ?? '-',
+        value: !isNil(node?.node_cpu) ? node?.node_cpu : '-',
       },
       {
         label: t('Memory'),
-        value: !isUndefined(node?.node_memory) ? `${node?.node_memory}G` : '-',
+        value: !isNil(node?.node_memory) ? `${node?.node_memory} G` : '-',
       },
       {
         label: t('GPU Model'),
@@ -224,11 +223,11 @@ function NodeDetail() {
       },
       {
         label: t('Availability of NVLINK'),
-        value: !isUndefined(node?.nvlink) ? (node?.nvlink ? t('YES') : t('NO')) : '-',
+        value: !isNil(node?.nvlink) ? (node?.nvlink ? t('YES') : t('NO')) : '-',
       },
       {
         label: t('Compute IB Network Card Configuration'),
-        value: !isUndefined(node?.node_ib_count_compute) ? `${node?.node_ib_count_compute}G` : '-',
+        value: !isNil(node?.node_ib_count_compute) ? `${node?.node_ib_count_compute} G` : '-',
       },
       {
         label: t('Number of Compute IB Network Cards'),
@@ -236,7 +235,7 @@ function NodeDetail() {
       },
       {
         label: t('Storage IB Network Card Configuration'),
-        value: !isUndefined(node?.node_ib_bw_storage) ? `${node?.node_ib_bw_storage}G` : '-',
+        value: !isNil(node?.node_ib_bw_storage) ? `${node?.node_ib_bw_storage} G` : '-',
       },
       {
         label: t('Number of Storage IB Network Cards'),

@@ -18,4 +18,4 @@ const extensionConfig = {
 };
 
 export default extensionConfig;
-// globals.context.registerExtension(extensionConfig);
+globals.context.registerExtension(extensionConfig);

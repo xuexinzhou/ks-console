@@ -52,7 +52,7 @@ function NodeStatus() {
   });
 
   const { data } = useQuery(['fetchStatus'], async () => {
-    return await request.get('/kapis/aicp.kubesphere.io/v1/gpu/get_node_status').then(res => {
+    return await request.get('/kapis/aicp.kubesphere.io/v1/gpu/get_total_node_status').then(res => {
       if ((res as any)?.ret_code === 0) {
         return res?.data ?? {};
       }

@@ -54,12 +54,13 @@ function GpuTable({ renderTabs }: Props) {
       title: t('Belonging Compute Pool'),
       field: 'gpu_node_compute_group',
       canHide: true,
-      render: (v, row) => v ?? '-',
+      render: (v, row) => v || '-',
     },
     {
       title: t('GPU UUID'),
       field: 'dev_gpu_uuid',
       canHide: true,
+      render: (v, row) => v || '-',
     },
     {
       title: t('GPU Status'),

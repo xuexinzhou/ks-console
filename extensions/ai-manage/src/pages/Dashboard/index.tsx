@@ -3,9 +3,9 @@ import React from 'react';
 function Dashboard() {
   return (
     <iframe
-      src="http://60.216.39.180:31919/dashboard/snapshot/9ZulVhsXYndDbw1xyqkIVwRrl7UtQa6X?orgId=1&var-instance=10.233.88.5:9400&kiosk=tv"
+      src="http://60.216.39.180:31919/dashboard/snapshot/SXURhF1091DNZ4B8j3IPUvncjm0FNYxR"
       width="100%"
-      height="800"
+      style={{ height: 'calc(100vh - 116px)' }}
     ></iframe>
   );
 }
