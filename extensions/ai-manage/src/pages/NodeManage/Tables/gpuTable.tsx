@@ -108,6 +108,21 @@ function GpuTable({ renderTabs }: Props) {
         );
       },
     },
+    {
+      title: t('命名空间'),
+      field: 'exported_namespace',
+      render: value => (value ? value : '-'),
+    },
+    {
+      title: t('容器'),
+      field: 'exported_container',
+      render: value => (value ? value : '-'),
+    },
+    {
+      title: t('Pod'),
+      field: 'exported_pod',
+      render: value => (value ? value : '-'),
+    },
   ];
 
   const formatServerData = (serverData: Record<string, any>) => {

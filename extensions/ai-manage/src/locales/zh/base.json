@@ -13,5 +13,8 @@
   "Control plane node": "控制平面节点",
   "Node service status": "节点服务状态",
   "GPU_ENERGY_NO_PERCENT_TCAP ":"GPU 功率",
-  "Core": "核"
+  "Core": "核",
+  "Green": "绿",
+  "Gray": "灰",
+  "Red":"红"
 }

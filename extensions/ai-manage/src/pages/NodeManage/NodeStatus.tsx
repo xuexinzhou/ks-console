@@ -83,16 +83,22 @@ function NodeStatus() {
 
   const renderStatusTip = () => {
     return (
-      <div>
-        <div>{'正常： 绿'}</div>
-        <div>{'Ready(就绪)'}</div>
-        <div className='mt12'>{'未就绪：灰'}</div>
+      <div style={{ whiteSpace: 'nowrap' }}>
+        <div>
+          {t('Normal')}：{t('Green')}
+        </div>
+        <div>{'Ready (就绪)'}</div>
+        <div className="mt12">
+          {t('Not ready')}：{t('Gray')}
+        </div>
         <div>{'NotReady (未就绪)'}</div>
-        <div>{'异常：红'}</div>
-        <div className='mt12'>{'Unreachable (不可达)'}</div>
-        <div>{'OutofDisk(磁盘空间不足)'}</div>
-        <div>{'MemoryPressure(内存压力)'}</div>
-        <div>{'DiskPressure(磁盘压力)'}</div>
+        <div className="mt12">
+          {t('Abnormal')}：{t('Red')}
+        </div>
+        <div>{'Unreachable (不可达)'}</div>
+        <div>{'OutofDisk (磁盘空间不足)'}</div>
+        <div>{'MemoryPressure (内存压力)'}</div>
+        <div>{'DiskPressure (磁盘压力)'}</div>
         <div>{'NetworkUnavailable (网络不可用)'}</div>
       </div>
     );

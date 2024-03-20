@@ -607,7 +607,7 @@ function Node({ renderTabs, setShowTab }: Props) {
         toolbarRight={currentCluster.kkName ? renderTableAction() : null}
         format={(item: any) => ({ ...params, ...nodeMapper(item) })}
         initialState={{ sortBy: [{ id: 'name', desc: false }] }}
-        toolbarLeft={renderTabs}
+        toolbarLeft={renderTabs()}
         onSelect={(_v: any, rows: any) => {
           setShowTab?.(!rows?.length);
         }}

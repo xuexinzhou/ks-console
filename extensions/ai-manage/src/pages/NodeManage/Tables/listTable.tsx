@@ -106,7 +106,7 @@ function ListTable({ renderTabs }: Props) {
       field: 'node_ib_count_storage',
       canHide: true,
       render: value => (value ? `${value}G` : '-'),
-    },
+    }
   ];
 
   const formatServerData = (serverData: Record<string, any>) => {
