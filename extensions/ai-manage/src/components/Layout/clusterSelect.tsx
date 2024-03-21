@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Select } from '@kubed/components';
-import { Icon,clusterStore } from '@ks-console/shared';
+import { Icon, clusterStore } from '@ks-console/shared';
 import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -45,14 +45,18 @@ function ClusterSelect(): JSX.Element {
       labelSelector: 'cluster-role.kubesphere.io/host=',
     },
   });
-
-  useQuery(['cluster'], async () => {
-    return await fetchDetail({name: cluster}).then((res)=>{
-      setDetailProps(res);
-    })
-  },{
-    enabled: !!cluster
-  });
+  
+  useQuery(
+    ['cluster', cluster],
+    async () => {
+      return await fetchDetail({ name: cluster }).then(res => {
+        setDetailProps(res);
+      });
+    },
+    {
+      enabled: !!cluster,
+    },
+  );
 
   const handleSelect = (_value: string) => {
     setValue(_value);

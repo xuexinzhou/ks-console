@@ -76,7 +76,7 @@ function KubernetesStatus({ cluster }: Props) {
   ).toFixed(3);
 
   const requestLatenciesTotal = getValueByUnit(
-    get(metrics as any, `${MetricTypes.request_latencies_total}.data.result[0].value[1]`),
+    get(metrics, `${MetricTypes?.request_latencies_total}?.data?.result?.[0]?.value?.[1]`, 0),
     'ms',
   );
 
