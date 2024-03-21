@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Select } from '@kubed/components';
-import { Icon } from '@ks-console/shared';
+import { Icon,clusterStore } from '@ks-console/shared';
+import { useQuery } from 'react-query';
 import styled from 'styled-components';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useStore } from '@kubed/stook';
@@ -25,6 +26,8 @@ const ItemIcon = styled.div`
   }
 `;
 
+const { fetchDetail } = clusterStore;
+
 function ClusterSelect(): JSX.Element {
   const Option = Select.Option;
   const navigate = useNavigate();
@@ -34,6 +37,8 @@ function ClusterSelect(): JSX.Element {
 
   const { useFetchClusterList } = BaseStore;
 
+  const [, setDetailProps] = useStore('cluster', {});
+
   const { data = [] } = useFetchClusterList({
     params: {
       limit: -1,
@@ -41,18 +46,23 @@ function ClusterSelect(): JSX.Element {
     },
   });
 
+  useQuery(['cluster'], async () => {
+    return await fetchDetail({name: cluster}).then((res)=>{
+      setDetailProps(res);
+    })
+  },{
+    enabled: !!cluster
+  });
+
   const handleSelect = (_value: string) => {
     setValue(_value);
     navigate(`/ai-manage/${value}/nodes`);
   };
 
-  const [, setDetailProps] = useStore('cluster', {});
-
   useEffect(() => {
     if (data?.length && !cluster) {
       const defaultValue = (data?.[0] as any)?.value;
       setValue(defaultValue);
-      setDetailProps(data?.[0]);
       navigate(`/ai-manage/${defaultValue}/overview`);
     }
   }, [data, cluster]);

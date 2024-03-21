@@ -370,12 +370,6 @@ function Node({ renderTabs, setShowTab }: Props) {
       ),
     },
     {
-      title: t('ROLE'),
-      field: 'role',
-      canHide: true,
-      render: roles => (roles.indexOf('master') === -1 ? t('WORKER') : t('CONTROL_PLANE')),
-    },
-    {
       title: t('STATUS'),
       field: 'status',
       canHide: true,
@@ -395,6 +389,12 @@ function Node({ renderTabs, setShowTab }: Props) {
           </div>
         );
       },
+    },
+    {
+      title: t('ROLE'),
+      field: 'role',
+      canHide: true,
+      render: roles => (roles.indexOf('master') === -1 ? t('WORKER') : t('CONTROL_PLANE')),
     },
     {
       title: t('Belonging Compute Pool'),
