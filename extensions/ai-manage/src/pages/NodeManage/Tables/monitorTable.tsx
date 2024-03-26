@@ -45,6 +45,7 @@ import {
 interface Props {
   renderTabs: () => React.ReactNode;
   setShowTab: (v: boolean) => void;
+  tab: string;
 }
 
 const hasExtensionModuleAnnotation = (module: string, annotation: string) => {
@@ -85,7 +86,7 @@ const renderTaintsTip = (data: Record<string, string>[]) => (
   </div>
 );
 
-function Node({ renderTabs, setShowTab }: Props) {
+function Node({ renderTabs, setShowTab, tab }: Props) {
   const params: Record<string, any> = useParams();
   const { cluster } = params;
   const [currentCluster] = useStore<ClusterDetail>('cluster');
@@ -130,6 +131,24 @@ function Node({ renderTabs, setShowTab }: Props) {
       });
     },
     { enabled: !!tableList?.length },
+  );
+
+  const { data: listData } = useQuery(
+    ['listdata'],
+    () => {
+      const url = '/kapis/aicp.kubesphere.io/v1/gpu/list_node_static_info';
+      return request(url).then(res => {
+        if ((res as any)?.ret_code === 0) {
+          const transformedData = (res?.data ?? []).reduce((result: any, item: any) => {
+            const { node_id, ...rest } = item;
+            result[node_id] = { node_id, ...rest };
+            return result;
+          }, {});
+          return transformedData;
+        }
+      });
+    },
+    { enabled: tab === 'list' },
   );
 
   const { data: monitorData } = useQuery(
@@ -355,6 +374,267 @@ function Node({ renderTabs, setShowTab }: Props) {
     },
   });
 
+  function renderMonitorColumns(): Column[] {
+    if (hasClusterModule(cluster, 'whizard-monitoring')) {
+      return [
+        {
+          title: t('CPU_USAGE'),
+          field: 'cpu',
+          canHide: true,
+          render: (value, row) => {
+            const metrics = getRecordMetrics(row, [
+              {
+                type: 'cpu_used',
+                unit: 'Core',
+              },
+              {
+                type: 'cpu_total',
+                unit: 'Core',
+              },
+              {
+                type: 'cpu_utilisation',
+              },
+            ]);
+            return (
+              <Field
+                value={
+                  <Resource>
+                    <span>{toPercentage(metrics.cpu_utilisation)}</span>
+                    {metrics.cpu_utilisation >= 0.9 && <Exclamation />}
+                  </Resource>
+                }
+                label={`${metrics.cpu_used}/${metrics.cpu_total} ${t('CORE_PL')}`}
+              />
+            );
+          },
+        },
+        {
+          title: t('MEMORY_USAGE'),
+          field: 'memory',
+          canHide: true,
+          render: (value, row) => {
+            const metrics = getRecordMetrics(row, [
+              {
+                type: 'memory_used',
+                unit: 'Gi',
+              },
+              {
+                type: 'memory_total',
+                unit: 'Gi',
+              },
+              {
+                type: 'memory_utilisation',
+              },
+            ]);
+            return (
+              <Field
+                value={
+                  <Resource>
+                    <span>{toPercentage(metrics.memory_utilisation)}</span>
+                    {metrics.memory_utilisation >= 0.9 && <Exclamation />}
+                  </Resource>
+                }
+                label={`${metrics.memory_used}/${metrics.memory_total} GiB`}
+              />
+            );
+          },
+        },
+        ...(hasExtensionModuleAnnotation(
+          'whizard-monitoring',
+          'monitoring.kubesphere.io/enable-gpu-monitoring',
+        ) && hasClusterModule(cluster, 'whizard-monitoring')
+          ? ([
+              {
+                title: t('GPU utilization'),
+                field: 'gpu',
+                canHide: true,
+                render: (value, row) => {
+                  const metrics = getRecordMetrics(row, [
+                    {
+                      type: 'gpu_used',
+                      unit: 'Core',
+                    },
+                    {
+                      type: 'gpu_total',
+                      unit: 'Core',
+                    },
+                    {
+                      type: 'gpu_utilization',
+                    },
+                  ]);
+                  return (
+                    <Field
+                      value={
+                        <Resource>
+                          <span>{toPercentage(metrics.gpu_utilization)}</span>
+                          {metrics.gpu_utilization >= 0.9 && <Exclamation />}
+                        </Resource>
+                      }
+                      // label={`${metrics.gpu_used}/${metrics.gpu_total} ${t('CORE_PL')}`}
+                    />
+                  );
+                },
+              },
+              {
+                title: t('GPU_MEMORY_USAGE'),
+                field: 'gpu_memory',
+                canHide: true,
+                render: (value, row) => {
+                  const metrics = getRecordMetrics(row, [
+                    {
+                      type: 'gpu_memory_used',
+                      unit: 'Gi',
+                    },
+                    {
+                      type: 'gpu_memory_total',
+                      unit: 'Gi',
+                    },
+                    {
+                      type: 'gpu_memory_utilization',
+                    },
+                  ]);
+                  return (
+                    <Field
+                      value={
+                        <Resource>
+                          <span>{toPercentage(metrics.gpu_memory_utilization)}</span>
+                          {metrics.gpu_memory_utilization >= 0.9 && <Exclamation />}
+                        </Resource>
+                      }
+                      label={`${metrics.gpu_memory_used}/${metrics.gpu_memory_total} GiB`}
+                    />
+                  );
+                },
+              },
+            ] as Column[])
+          : []),
+        {
+          title: t('POD_PL'),
+          field: 'pods',
+          canHide: true,
+          render: (value, row) => {
+            const metrics = getRecordMetrics(row, [
+              {
+                type: 'pod_used',
+              },
+              {
+                type: 'pod_total',
+              },
+            ]);
+            const uitilisation = metrics.pod_total ? metrics.pod_used / metrics.pod_total : 0;
+            return (
+              <Field
+                value={`${toPercentage(uitilisation)}`}
+                label={`${metrics.pod_used}/${metrics.pod_total}`}
+              />
+            );
+          },
+        },
+        {
+          title: t('ALLOCATED_CPU'),
+          field: 'allocated_resources_cpu',
+          canHide: true,
+          render: (value, row) => renderCPUTooltip(row),
+        },
+        {
+          title: t('ALLOCATED_MEMORY'),
+          field: 'allocated_resources_memory',
+          canHide: true,
+          render: (value, row) => renderMemoryTooltip(row),
+        },
+      ] as Column[];
+    }
+
+    return [] as Column[];
+  }
+
+  const renderListColumns = () => {
+    return [
+      {
+        title: t('CPU Model'),
+        field: 'node_cpu_model',
+        canHide: true,
+        render: (_v, row) => get(listData, [row.name, 'node_cpu_model'], '-'),
+      },
+      {
+        title: t('CPU cores'),
+        field: 'node_cpu',
+        canHide: true,
+        render: (_v, row) => {
+          const value = get(listData, [row.name, 'node_cpu']);
+          return value ? `${value} ${t('Core')}` : '-';
+        },
+      },
+      {
+        title: t('Memory'),
+        field: 'node_memory',
+        canHide: true,
+        render: (_v, row) => {
+          const value = get(listData, [row.name, 'node_memory']);
+          return value ? `${value}G` : '-';
+        },
+      },
+      {
+        title: t('GPU Model'),
+        field: 'node_gpu_model',
+        render: (_v, row) => get(listData, [row.name, 'node_gpu_model'], '-'),
+      },
+      {
+        title: t('GPU Memory'),
+        field: 'node_gpu_memory',
+        canHide: true,
+        render: (_v, row) => {
+          const value = get(listData, [row.name, 'node_gpu_memory']);
+          return value ? `${value}G` : '-';
+        },
+      },
+      {
+        title: t('Number of GPU Cards'),
+        field: 'node_gpu',
+        render: (_v, row) => get(listData, [row.name, 'node_gpu'], '-'),
+      },
+      {
+        title: t('Compute IB Network Card Configuration'),
+        field: 'node_ib_bw_compute',
+        canHide: true,
+        render: (_v, row) => {
+          const value = get(listData, [row.name, 'node_ib_bw_compute']);
+          return value ? `${value}G` : '-';
+        },
+      },
+      {
+        title: t('Number of Compute IB Network Cards'),
+        field: 'node_ib_count_compute',
+        render: (_v, row) => get(listData, [row.name, 'node_ib_count_compute'], '-'),
+      },
+      {
+        title: t('Storage IB Network Card Configuration'),
+        field: 'node_ib_bw_storage',
+        canHide: true,
+        render: (_v, row) => {
+          const value = get(listData, [row.name, 'node_ib_bw_storage']);
+          return value ? `${value}G` : '-';
+        },
+      },
+      {
+        title: t('Number of Storage IB Network Cards'),
+        field: 'node_ib_count_storage',
+        canHide: true,
+        render: (_v, row) => {
+          const value = get(listData, [row.name, 'node_ib_count_storage']);
+          return value ? `${value}G` : '-';
+        },
+      },
+    ] as Column[];
+  };
+
+  const renderColumns = () => {
+    if (tab === 'monitor') {
+      return renderMonitorColumns();
+    }
+    return renderListColumns();
+  };
+
   const columns: Column[] = [
     {
       title: t('Node Name'),
@@ -404,175 +684,7 @@ function Node({ renderTabs, setShowTab }: Props) {
         return computedGroup?.[row?.name]?.gpu_node_compute_group || '-';
       },
     },
-    ...(hasClusterModule(cluster, 'whizard-monitoring')
-      ? ([
-          {
-            title: t('CPU_USAGE'),
-            field: 'cpu',
-            canHide: true,
-            render: (value, row) => {
-              const metrics = getRecordMetrics(row, [
-                {
-                  type: 'cpu_used',
-                  unit: 'Core',
-                },
-                {
-                  type: 'cpu_total',
-                  unit: 'Core',
-                },
-                {
-                  type: 'cpu_utilisation',
-                },
-              ]);
-              return (
-                <Field
-                  value={
-                    <Resource>
-                      <span>{toPercentage(metrics.cpu_utilisation)}</span>
-                      {metrics.cpu_utilisation >= 0.9 && <Exclamation />}
-                    </Resource>
-                  }
-                  label={`${metrics.cpu_used}/${metrics.cpu_total} ${t('CORE_PL')}`}
-                />
-              );
-            },
-          },
-          {
-            title: t('MEMORY_USAGE'),
-            field: 'memory',
-            canHide: true,
-            render: (value, row) => {
-              const metrics = getRecordMetrics(row, [
-                {
-                  type: 'memory_used',
-                  unit: 'Gi',
-                },
-                {
-                  type: 'memory_total',
-                  unit: 'Gi',
-                },
-                {
-                  type: 'memory_utilisation',
-                },
-              ]);
-              return (
-                <Field
-                  value={
-                    <Resource>
-                      <span>{toPercentage(metrics.memory_utilisation)}</span>
-                      {metrics.memory_utilisation >= 0.9 && <Exclamation />}
-                    </Resource>
-                  }
-                  label={`${metrics.memory_used}/${metrics.memory_total} GiB`}
-                />
-              );
-            },
-          },
-          ...(hasExtensionModuleAnnotation(
-            'whizard-monitoring',
-            'monitoring.kubesphere.io/enable-gpu-monitoring',
-          ) && hasClusterModule(cluster, 'whizard-monitoring')
-            ? ([
-                {
-                  title: t('GPU utilization'),
-                  field: 'gpu',
-                  canHide: true,
-                  render: (value, row) => {
-                    const metrics = getRecordMetrics(row, [
-                      {
-                        type: 'gpu_used',
-                        unit: 'Core',
-                      },
-                      {
-                        type: 'gpu_total',
-                        unit: 'Core',
-                      },
-                      {
-                        type: 'gpu_utilization',
-                      },
-                    ]);
-                    return (
-                      <Field
-                        value={
-                          <Resource>
-                            <span>{toPercentage(metrics.gpu_utilization)}</span>
-                            {metrics.gpu_utilization >= 0.9 && <Exclamation />}
-                          </Resource>
-                        }
-                        // label={`${metrics.gpu_used}/${metrics.gpu_total} ${t('CORE_PL')}`}
-                      />
-                    );
-                  },
-                },
-                {
-                  title: t('GPU_MEMORY_USAGE'),
-                  field: 'gpu_memory',
-                  canHide: true,
-                  render: (value, row) => {
-                    const metrics = getRecordMetrics(row, [
-                      {
-                        type: 'gpu_memory_used',
-                        unit: 'Gi',
-                      },
-                      {
-                        type: 'gpu_memory_total',
-                        unit: 'Gi',
-                      },
-                      {
-                        type: 'gpu_memory_utilization',
-                      },
-                    ]);
-                    return (
-                      <Field
-                        value={
-                          <Resource>
-                            <span>{toPercentage(metrics.gpu_memory_utilization)}</span>
-                            {metrics.gpu_memory_utilization >= 0.9 && <Exclamation />}
-                          </Resource>
-                        }
-                        label={`${metrics.gpu_memory_used}/${metrics.gpu_memory_total} GiB`}
-                      />
-                    );
-                  },
-                },
-              ] as Column[])
-            : []),
-          {
-            title: t('POD_PL'),
-            field: 'pods',
-            canHide: true,
-            render: (value, row) => {
-              const metrics = getRecordMetrics(row, [
-                {
-                  type: 'pod_used',
-                },
-                {
-                  type: 'pod_total',
-                },
-              ]);
-              const uitilisation = metrics.pod_total ? metrics.pod_used / metrics.pod_total : 0;
-              return (
-                <Field
-                  value={`${toPercentage(uitilisation)}`}
-                  label={`${metrics.pod_used}/${metrics.pod_total}`}
-                />
-              );
-            },
-          },
-          {
-            title: t('ALLOCATED_CPU'),
-            field: 'allocated_resources_cpu',
-            canHide: true,
-            render: (value, row) => renderCPUTooltip(row),
-          },
-          {
-            title: t('ALLOCATED_MEMORY'),
-            field: 'allocated_resources_memory',
-            canHide: true,
-            render: (value, row) => renderMemoryTooltip(row),
-          },
-        ] as Column[])
-      : []),
+    ...renderColumns(),
     {
       id: 'more',
       title: ' ',

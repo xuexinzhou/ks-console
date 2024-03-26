@@ -35,9 +35,11 @@ function TableWrap() {
   return (
     <TableContent>
       {showTab && <StyledNav data={navs} value={tab} onChange={v => setTab(v)} />}
-      {tab === 'monitor' && <MonitorTable renderTabs={defaultTabs} setShowTab={setShowTab} />}
-      {tab === 'list' && <ListTable renderTabs={defaultTabs} />}
-      {tab === 'gpu' && <GpuTable renderTabs={defaultTabs} />}
+      {tab === 'gpu' ? (
+        <GpuTable renderTabs={defaultTabs} />
+      ) : (
+        <MonitorTable renderTabs={defaultTabs} setShowTab={setShowTab} tab={tab} />
+      )}
     </TableContent>
   );
 }
