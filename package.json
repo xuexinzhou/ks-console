@@ -33,7 +33,9 @@
     "@kubed/hooks": "^0.0.14",
     "@kubed/icons": "^0.0.16",
     "@kubed/log-viewer": "^0.0.17",
-    "@kubed/stook": "^0.0.4"
+    "@kubed/stook": "^0.0.4",
+    "@types/file-saver": "^2.0.7",
+    "file-saver": "^2.0.5"
   },
   "devDependencies": {
     "@babel/cli": "^7.15.7",
