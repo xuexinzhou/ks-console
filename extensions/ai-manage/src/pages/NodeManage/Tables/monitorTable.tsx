@@ -113,7 +113,7 @@ function Node({ renderTabs, setShowTab, tab }: Props) {
 
   const tableRef = useRef<TableRef>();
 
-  const { data: computedGroup } = useQuery(
+  const { data: computedGroup, refetch: computedGroupRefetch } = useQuery(
     ['computed_group', tableList],
     () => {
       const url = '/kapis/aicp.kubesphere.io/v1/gpu/get_compute_group_by_node_ids?';
@@ -133,8 +133,8 @@ function Node({ renderTabs, setShowTab, tab }: Props) {
     { enabled: !!tableList?.length },
   );
 
-  const { data: listData } = useQuery(
-    ['listdata'],
+  const { data: listData, refetch: listRefetch } = useQuery(
+    ['listdata', tableList],
     () => {
       const url = '/kapis/aicp.kubesphere.io/v1/gpu/list_node_static_info';
       return request(url).then(res => {
@@ -262,6 +262,10 @@ function Node({ renderTabs, setShowTab, tab }: Props) {
 
   const callback = () => {
     tableRef?.current?.refetch();
+    computedGroupRefetch();
+    if (tab === 'list') {
+      listRefetch();
+    }
   };
 
   const { del } = useCommonActions({
