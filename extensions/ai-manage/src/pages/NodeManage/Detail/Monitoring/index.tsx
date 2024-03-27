@@ -18,12 +18,12 @@ const MetricTypes = {
   cpu_load1: 'node_load1',
   cpu_load5: 'node_load5',
   cpu_load15: 'node_load15',
-  gpu_utilization: 'node_gpu_utilization',
-  gpu_memory_utilization: 'node_gpu_memory_utilization',
-  gpu_memory_available: 'node_gpu_memory_available',
-  gpu_memory_usage: 'node_gpu_memory_usage',
-  gpu_temp: 'node_gpu_temp',
-  gpu_power_usage: 'node_gpu_power_usage',
+  gpu_utilization: 'node_per_gpu_utilization',
+  gpu_memory_utilization: 'node_per_gpu_memory_utilization',
+  gpu_memory_available: 'node_per_gpu_memory_available',
+  gpu_memory_usage: 'node_per_gpu_memory_usage',
+  gpu_temp: 'node_per_gpu_temp',
+  gpu_power_usage: 'node_per_gpu_power_usage',
   memory_utilisation: 'node_memory_utilisation',
   memory_usage: 'node_memory_usage_wo_cache',
   disk_utilisation: 'node_disk_size_utilisation',
@@ -78,20 +78,6 @@ function Monitorings() {
     /* TODO: missing INODE_USAGE */
   }
   const monitoringCfgs = [
-    // {
-    //   type: 'utilisation1',
-    //   title: 'GPU 使用率',
-    //   unit: '%',
-    //   legend: ['GPU_USAGE'],
-    //   data: get(metrics, `${MetricTypes.cpu_utilisation}.data.result`, []),
-    // },
-    // {
-    //   type: 'utilisation2',
-    //   title: 'GPU 显存使用率',
-    //   unit: '%',
-    //   legend: ['GPU_USAGE2'],
-    //   data: get(metrics, `${MetricTypes.cpu_utilisation}.data.result`, []),
-    // },
     {
       type: 'utilisation',
       title: 'CPU_USAGE',
@@ -102,7 +88,7 @@ function Monitorings() {
     {
       type: 'load',
       title: 'AVERAGE_CPU_LOAD',
-      legend: [t('TIME_M', { num: 1 }), t('TIME_M', { num: 5 }), t('TIME_M', { num: 15 })],
+      legend: [t('TIME_M', { count: 1 }), t('TIME_M', { count: 5 }), t('TIME_M', { count: 15 })],
       data: [
         get(metrics, `${MetricTypes.cpu_load1}.data.result[0]`, {}),
         get(metrics, `${MetricTypes.cpu_load5}.data.result[0]`, {}),
@@ -160,8 +146,8 @@ function Monitorings() {
       unitType: 'memory',
       legend: ['NODE_GPU_MEMORY_USAGED', 'NODE_GPU_MEMORY_UNUSAGED'],
       data: [
-        get(metrics, `${MetricTypes.gpu_memory_usage}.data.result[0]`, {}),
-        get(metrics, `${MetricTypes.gpu_memory_available}.data.result[0]`, {}),
+        ...get(metrics, `${MetricTypes.gpu_memory_usage}.data.result`, []),
+        ...get(metrics, `${MetricTypes.gpu_memory_available}.data.result`, []),
       ],
     },
 
@@ -222,6 +208,17 @@ function Monitorings() {
     >
       {configs.map((item: any) => {
         item.data = isEmpty(item.data) ? [{ values: getZeroValues() }] : item.data;
+        if (item.title === 'GPU_MEMORY_USAGE' && item.unitType === 'memory') {
+          const dataLength = item.data?.length;
+          item.legend = item.data.map(
+            (data: any, index: number) =>
+              `GPU${data?.metric?.gpu ?? ''}(${t(
+                index > dataLength / 2 - 1 ? item.legend[1] : item.legend[0],
+              )})`,
+          );
+        } else if (item.title.includes('GPU')) {
+          item.legend = item.data.map((data: any) => `GPU${data?.metric?.gpu ?? ''}`);
+        }
         const config = getAreaChartOps(item);
         return <Chart {...config} key={`${item.title}_${item.type}`} categories={item.legend} />;
       })}

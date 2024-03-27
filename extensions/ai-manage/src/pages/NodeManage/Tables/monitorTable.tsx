@@ -470,7 +470,7 @@ function Node({ renderTabs, setShowTab, tab }: Props) {
                           {metrics.gpu_utilization >= 0.9 && <Exclamation />}
                         </Resource>
                       }
-                      // label={`${metrics.gpu_used}/${metrics.gpu_total} ${t('CORE_PL')}`}
+                      // label={`${metrics.gpu_used}/${metrics.gpu_total} GPU`}
                     />
                   );
                 },
