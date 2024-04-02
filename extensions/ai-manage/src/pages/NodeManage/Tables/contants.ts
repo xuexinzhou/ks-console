@@ -19,6 +19,9 @@ export const MetricTypes: Record<string, string> = {
   gpu_memory_total: 'node_gpu_memory_total',
   pod_used: 'node_pod_running_count',
   pod_total: 'node_pod_quota',
+  node_disk_size_utilisation: 'node_disk_size_utilisation',
+  node_disk_size_usage: 'node_disk_size_usage',
+  node_disk_size_capacity: 'node_disk_size_capacity',
   allocatable_cpu_total: 'node_pod_requests_cpu_total',
   allocatable_cpu_utilisation: 'node_pod_requests_cpu_allocatable_utilisation',
   limit_cpu_total: 'node_pod_limits_cpu_total',
@@ -51,7 +54,8 @@ export const tips = [
 
 export const toPercentage = (num: number) => {
   const number = isUndefined(num) || isNaN(num) ? 0 : Number(num);
-  return `${Math.ceil(number * 100)}%`;
+  const result = (number * 100).toFixed(1).toString().replace(/(\.[0-9]*[1-9])0+$|\.0*$/, "$1");
+  return `${result}%`;
 };
 export const getUnschedulable = (record: any) => {
   const taints = record.taints;

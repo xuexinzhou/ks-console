@@ -6,12 +6,35 @@ import {
   StatusIndicator,
   Icon,
   transformRequestParams,
+  Column,
 } from '@ks-console/shared';
-import { useParams } from 'react-router-dom';
+import styled from 'styled-components';
+import { Field } from '@kubed/components';
+import { useParams, Link } from 'react-router-dom';
+
+export const FieldLabel = styled.div`
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap: normal;
+  overflow: hidden;
+  font-weight: 400;
+  color: #79879c;
+  max-width: 300px;
+`;
 
 function FaultRecord() {
-  const { name } = useParams();
-  const columns = [
+  const { name, cluster } = useParams();
+  const columns: Column[] = [
+    {
+      title: t('故障ID'),
+      field: 'records_id',
+    },
+    {
+      title: t('故障等级'),
+      canHide: true,
+      field: 'fault_priority',
+      render: v => v ?? '-',
+    },
     {
       title: t('故障时间'),
       field: 'search_word',
@@ -19,49 +42,53 @@ function FaultRecord() {
       render: (_v: string, row: any) => (row?.created_at ? formatTime(row?.created_at) : '-'),
     },
     {
-      title: t('故障原因'),
+      title: t('GPU UUID'),
+      field: 'dev_gpu_uuid',
       canHide: true,
-      field: 'fault_reason',
+      width: 200,
+      render: (v, row) => v || '-',
     },
     {
-      title: t('故障处理'),
-      field: 'solution',
+      title: t('错误码'),
+      field: 'gpu_err_id',
       canHide: true,
-      render: (value: string) => {
-        return <span dangerouslySetInnerHTML={{ __html: value }} />;
-      },
+      render: v => v || '-',
     },
     {
-      title: t('处理结果'),
+      title: t('XID'),
+      canHide: true,
+      field: 'gpu_xid',
+      render: v => v ?? '-',
+    },
+    {
+      title: t('错误描述'),
+      field: 'gpu_err_desc',
+      canHide: true,
+      width: 200,
+      render: v => v || '-',
+    },
+    {
+      title: t('故障状态'),
       canHide: true,
       field: 'fault_status',
       render: (v: string) => (
         <StatusIndicator type={v === '1' ? 'ready' : 'deleted'}>
-          {v === '1' ? '已修复' : '未修复'}
+          {v === '1' ? '已处理' : '未处理'}
         </StatusIndicator>
       ),
     },
     {
-      title: t('未修复原因'),
+      title: t('故障处理'),
+      field: 'fault_treatment',
       canHide: true,
-      field: 'unresolved_reason',
+      render: (value: string) => (value ? value : '-'),
     },
     {
-      title: t('故障恢复时间'),
+      title: t('故障建议'),
       canHide: true,
-      field: 'recovery_time',
-      render: (v: string) => (v ? formatTime(v) : '-'),
-    },
-    {
-      title: t('故障保持时间'),
-      canHide: true,
-      field: 'fault_time',
-      render: (v: number) => {
-        if (v && v > 24) {
-          return `超过24小时`;
-        }
-        return `${v ?? '-'}小时`;
-      },
+      width: 200,
+      field: 'gpu_suggestions',
+      render: (v: string) => (v ? v : '-'),
     },
   ];
 
@@ -85,6 +112,7 @@ function FaultRecord() {
             gpu_node_id: name,
           };
         }}
+        parameters={{ gpu_node_id: name }}
         columns={columns}
         serverDataFormat={formatServerData}
         simpleSearch

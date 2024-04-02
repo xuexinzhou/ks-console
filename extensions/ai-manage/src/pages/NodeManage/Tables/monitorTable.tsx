@@ -510,6 +510,40 @@ function Node({ renderTabs, setShowTab, tab }: Props) {
                   );
                 },
               },
+              {
+                title: t('Physical disk utilization'),
+                field: 'disk',
+                canHide: true,
+                render: (value, row) => {
+                  const metrics = getRecordMetrics(row, [
+                    {
+                      type: 'node_disk_size_capacity',
+                      unit: 'GiB',
+                    },
+                    {
+                      type: 'node_disk_size_usage',
+                      unit: 'GiB',
+                    },
+                    {
+                      type: 'node_disk_size_utilisation',
+                    },
+                  ]);
+                  return (
+                    <Field
+                      value={
+                        <Resource>
+                          <span>{toPercentage(metrics.node_disk_size_utilisation)}</span>
+                          {metrics.node_disk_size_utilisation >= 0.9 && <Exclamation />}
+                        </Resource>
+                      }
+                      label={`${getValueByUnit(
+                        metrics.node_disk_size_usage,
+                        'GB',
+                      )}/${getValueByUnit(metrics.node_disk_size_capacity, 'GB')} GiB`}
+                    />
+                  );
+                },
+              },
             ] as Column[])
           : []),
         {
