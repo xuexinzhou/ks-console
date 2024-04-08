@@ -5,6 +5,7 @@ export const navs = [
     children: [
       { name: 'overview', title: 'Dashboard', icon: 'dashboard' },
       { name: 'dashboard', title: 'Monitor Dashboard', icon: 'monitor' },
+      { name: 'xid', title: 'XidErrir & Violations', icon: 'monitor' },
       // {
       //   name: 'monitor-dashboard',
       //   title: 'Monitor Dashboard',
