@@ -1,6 +1,7 @@
 import React, { useRef, useMemo } from 'react';
 import { request } from '@ks-console/shared';
 import { useQuery } from 'react-query';
+import { Loading } from '@kubed/components';
 
 function Dashboard() {
   const iframeRef: any = useRef(null);
@@ -19,7 +20,7 @@ function Dashboard() {
     }
   };
 
-  const { data } = useQuery(['fetchGpuNode'], async () => {
+  const { data, isFetching } = useQuery(['fetchGpuNode'], async () => {
     return await request.get(`/kapis/aicp.kubesphere.io/v1/gpu/list_gpu_dev_info`).then(res => {
       if ((res as any)?.ret_code === 0) {
         return res?.data ?? {};
@@ -45,6 +46,7 @@ function Dashboard() {
 
   return (
     <>
+      {isFetching && <Loading className="page-loading" />}
       <iframe
         id="my-dashboard"
         ref={iframeRef}

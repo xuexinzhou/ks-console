@@ -80,38 +80,6 @@ function Monitorings() {
   const monitoringCfgs = [
     {
       type: 'utilisation',
-      title: 'CPU_USAGE',
-      unit: '%',
-      legend: ['CPU_USAGE'],
-      data: get(metrics, `${MetricTypes.cpu_utilisation}.data.result`, []),
-    },
-    {
-      type: 'load',
-      title: 'AVERAGE_CPU_LOAD',
-      legend: [t('TIME_M', { count: 1 }), t('TIME_M', { count: 5 }), t('TIME_M', { count: 15 })],
-      data: [
-        get(metrics, `${MetricTypes.cpu_load1}.data.result[0]`, {}),
-        get(metrics, `${MetricTypes.cpu_load5}.data.result[0]`, {}),
-        get(metrics, `${MetricTypes.cpu_load15}.data.result[0]`, {}),
-      ],
-    },
-    {
-      type: 'usage',
-      title: 'MEMORY_USAGE',
-      unitType: 'memory',
-      legend: ['MEMORY_USAGE'],
-      data: get(metrics, `${MetricTypes.memory_usage}.data.result`, []),
-    },
-    {
-      type: 'utilisation',
-      title: 'MEMORY_USAGE',
-      unit: '%',
-      legend: ['MEMORY_USAGE'],
-      range: [0, 100],
-      data: get(metrics, `${MetricTypes.memory_utilisation}.data.result`, []),
-    },
-    {
-      type: 'utilisation',
       title: 'GPU_USAGE',
       unit: '%',
       legend: ['GPU_USAGE'],
@@ -150,7 +118,38 @@ function Monitorings() {
         ...get(metrics, `${MetricTypes.gpu_memory_available}.data.result`, []),
       ],
     },
-
+    {
+      type: 'utilisation',
+      title: 'CPU_USAGE',
+      unit: '%',
+      legend: ['CPU_USAGE'],
+      data: get(metrics, `${MetricTypes.cpu_utilisation}.data.result`, []),
+    },
+    {
+      type: 'load',
+      title: 'AVERAGE_CPU_LOAD',
+      legend: [t('TIME_M', { count: 1 }), t('TIME_M', { count: 5 }), t('TIME_M', { count: 15 })],
+      data: [
+        get(metrics, `${MetricTypes.cpu_load1}.data.result[0]`, {}),
+        get(metrics, `${MetricTypes.cpu_load5}.data.result[0]`, {}),
+        get(metrics, `${MetricTypes.cpu_load15}.data.result[0]`, {}),
+      ],
+    },
+    {
+      type: 'usage',
+      title: 'MEMORY_USAGE',
+      unitType: 'memory',
+      legend: ['MEMORY_USAGE'],
+      data: get(metrics, `${MetricTypes.memory_usage}.data.result`, []),
+    },
+    {
+      type: 'utilisation',
+      title: 'MEMORY_USAGE',
+      unit: '%',
+      legend: ['MEMORY_USAGE'],
+      range: [0, 100],
+      data: get(metrics, `${MetricTypes.memory_utilisation}.data.result`, []),
+    },
     {
       type: 'utilisation',
       title: 'DISK_USAGE',
