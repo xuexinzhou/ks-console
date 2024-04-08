@@ -28,19 +28,16 @@ function Dashboard() {
   });
 
   const url = useMemo(() => {
-    const defaultHost = 'http://60.216.39.180:31919';
-    const shiHost = 'http://grafana.aicp-monitoring';
+    const defaultHost = globals?.config?.grafana ?? 'http://60.216.39.180:31919';
     const baseUrl = `${defaultHost}/d/Oxed_c6Wz/nvidia-dcgm-exporter-dashboard?orgId=1`;
     const configUrl = '&var-gpu=All&theme=light&refresh=10s&kiosk=tv';
     const nodeSet = new Set<string>([]);
-    data?.forEach(
-      (item: any) => {
-        if (item?.gpu_node_id) {
-          const id: string = item?.gpu_node_id ?? '';
-          nodeSet.add(id);
-        }
-      },
-    );
+    data?.forEach((item: any) => {
+      if (item?.gpu_node_id) {
+        const id: string = item?.gpu_node_id ?? '';
+        nodeSet.add(id);
+      }
+    });
     return `${baseUrl}${Array.from(nodeSet)
       .map(item => `&var-Hostname=${item}`)
       .join('')}${configUrl}`;
