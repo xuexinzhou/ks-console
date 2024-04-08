@@ -94,8 +94,8 @@ function FaultRecord() {
 
   const formatServerData = (serverData: Record<string, any>) => {
     return {
-      items: serverData.data || [],
-      totalItems: serverData.counts,
+      items: serverData?.data?.[0]?.fault_records || [],
+      totalItems: serverData?.data?.[0]?.counts || 0,
     };
   };
 
