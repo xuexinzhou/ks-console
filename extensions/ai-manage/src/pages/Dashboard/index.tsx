@@ -1,10 +1,9 @@
-import React, { useRef } from 'react';
+import React, { useRef, useMemo } from 'react';
+import { request } from '@ks-console/shared';
+import { useQuery } from 'react-query';
 
 function Dashboard() {
   const iframeRef: any = useRef(null);
-
-  const url =
-    'http://60.216.39.180:31919/d/Oxed_c6Wz/nvidia-dcgm-exporter-dashboard?orgId=1&var-instance=10.233.88.5%3A9400&var-instance=10.233.91.164%3A9400&var-gpu=All&theme=light&refresh=10s&kiosk=tv';
 
   const onIframeLoad = () => {
     if (iframeRef.current) {
@@ -19,6 +18,33 @@ function Dashboard() {
       } catch (error) {}
     }
   };
+
+  const { data } = useQuery(['fetchGpuNode'], async () => {
+    return await request.get(`/kapis/aicp.kubesphere.io/v1/gpu/list_gpu_dev_info`).then(res => {
+      if ((res as any)?.ret_code === 0) {
+        return res?.data ?? {};
+      }
+    });
+  });
+
+  const url = useMemo(() => {
+    const defaultHost = 'http://60.216.39.180:31919';
+    const shiHost = 'http://grafana.aicp-monitoring';
+    const baseUrl = `${defaultHost}/d/Oxed_c6Wz/nvidia-dcgm-exporter-dashboard?orgId=1`;
+    const configUrl = '&var-gpu=All&theme=light&refresh=10s&kiosk=tv';
+    const nodeSet = new Set<string>([]);
+    data?.forEach(
+      (item: any) => {
+        if (item?.gpu_node_id) {
+          const id: string = item?.gpu_node_id ?? '';
+          nodeSet.add(id);
+        }
+      },
+    );
+    return `${baseUrl}${Array.from(nodeSet)
+      .map(item => `&var-Hostname=${item}`)
+      .join('')}${configUrl}`;
+  }, [data]);
 
   return (
     <>
