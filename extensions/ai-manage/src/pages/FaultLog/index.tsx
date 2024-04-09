@@ -1,29 +1,46 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Banner } from '@kubed/components';
+import { Nodes } from '@kubed/icons';
+import { Card, Field } from '@kubed/components';
+import { get } from 'lodash';
 import {
-  Panel,
   DataTable,
   formatTime,
   StatusIndicator,
-  Icon,
   transformRequestParams,
   Column,
 } from '@ks-console/shared';
-import styled from 'styled-components';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 
-export const FieldLabel = styled.div`
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  word-wrap: normal;
-  overflow: hidden;
-  font-weight: 400;
-  color: #79879c;
-  max-width: 300px;
-`;
+import { FullRow, FullCol, StyledEntity, StyledField, FieldLabel } from './styles';
+import { Waring } from '../../icons';
 
-function FaultRecord() {
+function FaultLog() {
+  const [unprocessed, setUnprocessed] = useState(0);
+  const [processed, setProcessed] = useState(0);
+
   const { name } = useParams();
   const columns: Column[] = [
+    {
+      title: t('Node Name'),
+      field: 'gpu_node_id',
+      sortable: false,
+      render: (_v, row) => (
+        <Field
+          value={
+            <Link to={`/ai-manage/host/nodes/${row?.gpu_node_id}`}>{row?.gpu_node_id ?? '-'}</Link>
+          }
+          avatar={<Nodes size={40} />}
+          label={<FieldLabel>{row.gpu_node_ip || '-'}</FieldLabel>}
+        />
+      ),
+    },
+    {
+      title: t('Belonging Compute Pool'),
+      field: 'gpu_node_compute_group',
+      canHide: true,
+      render: (v, row) => v || '-',
+    },
     {
       title: t('Fault ID'),
       field: 'records_id',
@@ -92,39 +109,64 @@ function FaultRecord() {
   ];
 
   const formatServerData = (serverData: Record<string, any>) => {
+    const data = get(serverData, 'data[0]');
+    setProcessed(data?.fault_treated ?? 0);
+    setUnprocessed(data?.fault_untreated ?? 0);
+
     return {
-      items: serverData?.data?.[0]?.fault_records || [],
-      totalItems: serverData?.data?.[0]?.counts || 0,
+      items: data?.fault_records || [],
+      totalItems: data?.counts || 0,
     };
   };
 
   return (
-    <Panel title={t('Fault Log')}>
+    <div>
+      <Banner
+        className="mb12"
+        icon={<Waring />}
+        title={t('Fault Log')}
+        description={t('Fault Desc')}
+      />
+      <Card className="mb12">
+        <StyledEntity bordered={false}>
+          <FullRow>
+            <FullCol span={3}>
+              <StyledField
+                avatar={<Waring size={40} />}
+                label={t('Unprocessed')}
+                value={unprocessed}
+              />
+            </FullCol>
+            <FullCol span={8}>
+              <Field label={t('Processed')} value={processed} />
+            </FullCol>
+          </FullRow>
+        </StyledEntity>
+      </Card>
       <DataTable
         tableName="record"
         rowKey="dev_gpu_uuid"
-        url="/kapis/aicp.kubesphere.io/v1/gpu/list_gpu_fault_record"
-        transformRequestParams={params => {
-          const p = transformRequestParams(params as any);
-          return {
-            ...p,
-            gpu_node_id: name,
-          };
-        }}
         placeholder={t('Fault placeholder')}
+        url="/kapis/aicp.kubesphere.io/v1/gpu/list_gpu_fault_record"
         parameters={{ gpu_node_id: name }}
         columns={columns}
         serverDataFormat={formatServerData}
         simpleSearch
+        transformRequestParams={params => {
+          const p = transformRequestParams(params as any);
+          return {
+            ...p,
+          };
+        }}
         emptyOptions={{
           withoutTable: true,
-          image: <Icon name="record" size={48} />,
+          image: <Waring size={48} />,
           title: t('No record of faults found'),
         }}
         showFooter={false}
       />
-    </Panel>
+    </div>
   );
 }
 
-export default FaultRecord;
+export default FaultLog;
